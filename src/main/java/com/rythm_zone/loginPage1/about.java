@@ -1,193 +1,627 @@
 package com.rythm_zone.loginPage1;
 
+import java.net.URL;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class about extends Application {
-    Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-    double screenWidth = screenBounds.getWidth();
-    double screenHeight = screenBounds.getHeight();
+
+    private static final String BG = "#0B1020";
+    private static final String CARD = "#151D31";
+    private static final String PINK = "#FF4F9A";
+    private static final String PURPLE = "#9B7BFF";
+    private static final String WHITE = "#FFFFFF";
+    private static final String MUTED = "#B5BED3";
 
     @Override
     public void start(Stage stage) {
-        VBox aboutBox = new VBox(30);
-        aboutBox.setAlignment(Pos.TOP_LEFT);
-        aboutBox.setPadding(new Insets(40));
-        aboutBox.setStyle("-fx-background-color: #0B101A;");
-        aboutBox.setAlignment(Pos.CENTER);
 
-        // === Title ===
-        Label title = new Label("★ About Our Institute ★");
-        title.setFont(Font.font("Georgia", FontWeight.BOLD, 32));
-        title.setTextFill(Color.web("#CB3083"));
+        Rectangle2D bounds =
+                Screen.getPrimary().getVisualBounds();
 
-        // === Profile Image and Name ===
-        Image profileImage = new Image(getClass().getResourceAsStream("/asset\\Screenshot 2025-07-27 140709.png"));
-        ImageView imageView = new ImageView(profileImage);
-        imageView.setFitWidth(250);
-        imageView.setFitHeight(250);
+        // Main container
+        VBox root = new VBox(35);
+        root.setPadding(new Insets(35, 45, 35, 45));
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setStyle("-fx-background-color: " + BG + ";");
+
+        // ================= HEADER =================
+
+        HBox header = new HBox();
+
+        Label logo = new Label("♫ RhythmZone");
+        logo.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 25));
+        logo.setTextFill(Color.web(PINK));
+
+        Region headerSpacer = new Region();
+        HBox.setHgrow(headerSpacer, Priority.ALWAYS);
+
+        Label aboutLabel = new Label("ABOUT US");
+        aboutLabel.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+        aboutLabel.setTextFill(Color.web(WHITE));
+        aboutLabel.setStyle(
+                "-fx-border-color: " + PINK + ";" +
+                "-fx-border-radius: 20;" +
+                "-fx-padding: 9 18;" +
+                "-fx-background-radius: 20;"
+        );
+
+        header.getChildren().addAll(
+                logo, headerSpacer, aboutLabel
+        );
+
+        // ================= HERO SECTION =================
+
+        VBox hero = new VBox(15);
+        hero.setAlignment(Pos.CENTER);
+        hero.setPadding(new Insets(30, 15, 20, 15));
+
+        Label badge = new Label("✦  OUR STORY  ✦");
+        badge.setTextFill(Color.web(PINK));
+        badge.setFont(Font.font("Arial", FontWeight.BOLD, 13));
+
+        Label heroTitle = new Label("More Than Just Music");
+        heroTitle.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 38));
+        heroTitle.setTextFill(Color.WHITE);
+        heroTitle.setWrapText(true);
+        heroTitle.setAlignment(Pos.CENTER);
+
+        Label heroSubtitle = new Label(
+                "A passion for music, creativity and technology."
+        );
+
+        heroSubtitle.setFont(Font.font("Arial", 16));
+        heroSubtitle.setTextFill(Color.web(MUTED));
+        heroSubtitle.setWrapText(true);
+        heroSubtitle.setAlignment(Pos.CENTER);
+
+        hero.getChildren().addAll(
+                badge, heroTitle, heroSubtitle
+        );
+
+        // ================= ABOUT PROJECT =================
+
+        VBox projectCard = createCard();
+
+        Label projectTitle = createHeading(
+                "🎵  About RhythmZone", 25, PINK
+        );
+
+        Label projectDescription = createBody(
+                "RhythmZone is a desktop-based music player " +
+                "application developed using Java and JavaFX.\n\n" +
+                "The project focuses on providing a simple and " +
+                "user-friendly music experience through a modern " +
+                "graphical interface. Firebase is used for the " +
+                "application's configured backend features."
+        );
+
+        projectCard.getChildren().addAll(
+                projectTitle, projectDescription
+        );
+
+        // ================= FOUNDER / DEVELOPER PROFILE =================
+
+        HBox profileCard = new HBox(35);
+        profileCard.setAlignment(Pos.CENTER);
+        profileCard.setPadding(new Insets(30));
+        profileCard.setMaxWidth(1000);
+
+        profileCard.setStyle(
+                "-fx-background-color: " + CARD + ";" +
+                "-fx-background-radius: 24;" +
+                "-fx-border-color: #303B56;" +
+                "-fx-border-radius: 24;"
+        );
+
+        // Vedika's profile image
+        ImageView vedikaImage = createCircularImage(
+                "/asset/vedika-rhythmzone.jpeg", 190
+        );
+
+        // Image glow border
+        StackPane imageFrame = new StackPane();
+        imageFrame.setPrefSize(210, 210);
+        imageFrame.setMinSize(210, 210);
+        imageFrame.setMaxSize(210, 210);
+
+        Circle outerCircle = new Circle(102);
+        outerCircle.setFill(Color.TRANSPARENT);
+        outerCircle.setStroke(Color.web(PINK));
+        outerCircle.setStrokeWidth(3);
+
+        imageFrame.getChildren().addAll(
+                outerCircle, vedikaImage
+        );
+
+        // Profile details
+        VBox profileDetails = new VBox(14);
+        profileDetails.setAlignment(Pos.CENTER_LEFT);
+
+        Label profileBadge = new Label("✦  MEET THE DEVELOPER");
+
+        profileBadge.setFont(
+                Font.font("Arial", FontWeight.BOLD, 12)
+        );
+
+        profileBadge.setTextFill(Color.web(PINK));
+
+        Label vedikaName = new Label("Vedika Kadam");
+
+        vedikaName.setFont(
+                Font.font("Arial", FontWeight.EXTRA_BOLD, 30)
+        );
+
+        vedikaName.setTextFill(Color.WHITE);
+
+        Label role = new Label("Java Developer | Project Contributor");
+
+        role.setFont(Font.font("Arial", 15));
+        role.setTextFill(Color.web(PURPLE));
+        role.setWrapText(true);
+
+        Label vedikaDescription = createBody(
+                "Passionate about technology, software development " +
+                "and creating meaningful applications.\n\n" +
+                "Through RhythmZone, I explored desktop application " +
+                "development using Java, JavaFX, Maven and Firebase."
+        );
+
+        Button contactButton = new Button("Keep Creating  ✦");
+
+        contactButton.setFont(
+                Font.font("Arial", FontWeight.BOLD, 13)
+        );
+
+        contactButton.setTextFill(Color.WHITE);
+
+        contactButton.setStyle(
+                "-fx-background-color: linear-gradient(to right, " +
+                PINK + ", " + PURPLE + ");" +
+                "-fx-background-radius: 22;" +
+                "-fx-padding: 12 22;" +
+                "-fx-cursor: hand;"
+        );
+
+        profileDetails.getChildren().addAll(
+                profileBadge,
+                vedikaName,
+                role,
+                vedikaDescription,
+                contactButton
+        );
+
+        HBox.setHgrow(profileDetails, Priority.ALWAYS);
+
+        profileCard.getChildren().addAll(
+                imageFrame, profileDetails
+        );
+
+        // ================= MENTORS SECTION =================
+
+        VBox mentorsSection = new VBox(22);
+        mentorsSection.setAlignment(Pos.CENTER);
+
+        Label mentorHeading = createHeading(
+                "People Who Inspired Us", 29, PINK
+        );
+
+        Label mentorSubtitle = createBody(
+                "A heartfelt thank you to the mentors who guided us."
+        );
+
+        mentorSubtitle.setAlignment(Pos.CENTER);
+
+        HBox mentorCards = new HBox(18);
+        mentorCards.setAlignment(Pos.CENTER);
+
+        VBox sachinCard = createMentorCard(
+                "✦",
+                "Sachin Sir",
+                "Your insights and encouragement helped us " +
+                "face challenges and push beyond our limits."
+        );
+
+        VBox subodhCard = createMentorCard(
+                "✧",
+                "Subodh Sir",
+                "Thank you for your guidance, approachability " +
+                "and help in solving technical challenges."
+        );
+
+        VBox shivCard = createMentorCard(
+                "♫",
+                "Shiv Sir",
+                "Your logical approach and motivation helped " +
+                "us keep moving forward."
+        );
+
+        VBox poonamCard = createMentorCard(
+                "♡",
+                "Poonam Khedkar",
+                "Thank you for your thoughtful guidance, " +
+                "constant support and encouragement."
+        );
+
+        mentorCards.getChildren().addAll(
+                sachinCard,
+                subodhCard,
+                shivCard,
+                poonamCard
+        );
+
+        mentorsSection.getChildren().addAll(
+                mentorHeading,
+                mentorSubtitle,
+                mentorCards
+        );
+
+        // ================= MISSION SECTION =================
+
+        HBox missionCards = new HBox(20);
+        missionCards.setAlignment(Pos.CENTER);
+
+        VBox missionCard = createInfoCard(
+                "🎯",
+                "Our Mission",
+                "To build a user-friendly music application " +
+                "that combines creativity and technology."
+        );
+
+        VBox technologyCard = createInfoCard(
+                "💻",
+                "Our Technology",
+                "Java 17, JavaFX, Maven and Firebase, " +
+                "according to the implemented features."
+        );
+
+        VBox visionCard = createInfoCard(
+                "✨",
+                "Our Vision",
+                "To continue learning, improving and creating " +
+                "better software experiences."
+        );
+
+        missionCards.getChildren().addAll(
+                missionCard,
+                technologyCard,
+                visionCard
+        );
+
+        // ================= THANK YOU SECTION =================
+
+        VBox thankYouCard = new VBox(15);
+        thankYouCard.setAlignment(Pos.CENTER);
+        thankYouCard.setPadding(new Insets(35));
+
+        thankYouCard.setStyle(
+                "-fx-background-color: linear-gradient(to right, " +
+                "#231936, #17243C);" +
+                "-fx-background-radius: 24;" +
+                "-fx-border-color: #40305E;" +
+                "-fx-border-radius: 24;"
+        );
+
+        Label thankYouTitle = createHeading(
+                "Thank You for Being Here 💖", 27, PINK
+        );
+
+        Label thankYouDescription = createBody(
+                "Every project is a step forward in the journey " +
+                "of learning and innovation.\n" +
+                "Keep exploring. Keep creating. Keep growing."
+        );
+
+        thankYouDescription.setAlignment(Pos.CENTER);
+
+        Button backButton = new Button("←  Back to Home");
+
+        backButton.setFont(
+                Font.font("Arial", FontWeight.BOLD, 14)
+        );
+
+        backButton.setTextFill(Color.WHITE);
+
+        backButton.setStyle(
+                "-fx-background-color: " + PINK + ";" +
+                "-fx-background-radius: 22;" +
+                "-fx-padding: 13 26;" +
+                "-fx-cursor: hand;"
+        );
+
+        backButton.setOnMouseEntered(e ->
+                backButton.setOpacity(0.8)
+        );
+
+        backButton.setOnMouseExited(e ->
+                backButton.setOpacity(1.0)
+        );
+
+        backButton.setOnAction(e ->
+                new home1().start(stage)
+        );
+
+        thankYouCard.getChildren().addAll(
+                thankYouTitle,
+                thankYouDescription,
+                backButton
+        );
+
+        // ================= FOOTER =================
+
+        Label footer = new Label(
+                "Made with ♡ by Vedika Kadam  |  RhythmZone"
+        );
+
+        footer.setFont(Font.font("Arial", 12));
+        footer.setTextFill(Color.web(MUTED));
+
+        // ================= ADD ALL SECTIONS =================
+
+        root.getChildren().addAll(
+                header,
+                hero,
+                projectCard,
+                profileCard,
+                mentorsSection,
+                missionCards,
+                thankYouCard,
+                footer
+        );
+
+        // ScrollPane
+        ScrollPane scrollPane = new ScrollPane(root);
+
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPannable(true);
+
+        scrollPane.setStyle(
+                "-fx-background: " + BG + ";" +
+                "-fx-background-color: " + BG + ";" +
+                "-fx-border-color: transparent;"
+        );
+
+        // Fade-in animation
+        root.setOpacity(0);
+
+        FadeTransition fade = new FadeTransition(
+                Duration.millis(900), root
+        );
+
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        fade.play();
+
+        Scene scene = new Scene(
+                scrollPane,
+                bounds.getWidth(),
+                bounds.getHeight()
+        );
+
+        stage.setTitle("About Us | RhythmZone");
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
+    }
+
+    // ================= HELPER METHODS =================
+
+    private ImageView createCircularImage(
+            String path, double size
+    ) {
+
+        ImageView imageView = new ImageView();
+
+        URL imageUrl = getClass().getResource(path);
+
+        if (imageUrl == null) {
+
+            System.err.println(
+                    "Image not found: " + path
+            );
+
+            // Show a placeholder if the photo is missing.
+            return imageView;
+        }
+
+        Image image = new Image(
+                imageUrl.toExternalForm(),
+                false
+        );
+
+        imageView.setImage(image);
+        imageView.setFitWidth(size);
+        imageView.setFitHeight(size);
         imageView.setPreserveRatio(false);
         imageView.setSmooth(true);
-        Circle clip = new Circle(125, 125, 125);
+
+        Circle clip = new Circle(
+                size / 2,
+                size / 2,
+                size / 2
+        );
+
         imageView.setClip(clip);
 
-        Label profName = new Label("Prof. Shashi Sir");
-        profName.setFont(Font.font("Georgia", FontWeight.BOLD, 25));
-        profName.setTextFill(Color.LIGHTYELLOW);
-        profName.setAlignment(Pos.CENTER);
+        return imageView;
+    }
 
-        VBox imageWithNameBox = new VBox(10, imageView, profName);
-        imageWithNameBox.setAlignment(Pos.CENTER);
+    private VBox createCard() {
 
-        Label sideText = new Label(
-                "Thank you so much Shashi Sir for your invaluable teachings and constant support.\n\n" +
-                        "The way you teach is truly unique and impactful — turning complex topics into crystal-clear concepts. " +
-                        "Your guidance and structured roadmap played a major role in my confidence for Supre-X Project.\n\n" +
-                        "Big thanks to Core2web for creating such a powerful learning environment. " +
-                        "Your mentorship helped me grow technically and shaped my mindset for real-world challenges.\n\n" +
-                        "Forever grateful. Your teachings will always stay with me!"
+        VBox card = new VBox(18);
+
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.setPadding(new Insets(28));
+        card.setMaxWidth(1000);
+
+        card.setStyle(
+                "-fx-background-color: " + CARD + ";" +
+                "-fx-background-radius: 22;" +
+                "-fx-border-color: #303B56;" +
+                "-fx-border-radius: 22;"
         );
-        sideText.setWrapText(true);
-        sideText.setTextFill(Color.LIGHTYELLOW);
-        sideText.setFont(Font.font("Georgia", 15));
-        sideText.setMaxWidth(600);
 
-        HBox imageTextBox = new HBox(30, imageWithNameBox, sideText);
-        imageTextBox.setAlignment(Pos.CENTER);
+        addHoverEffect(card);
 
-        // === Mentors Appreciation Section ===
-        Label mentorTitle = new Label("Special Thanks for");
-        mentorTitle.setFont(Font.font("Georgia", FontWeight.BOLD, 24));
-        mentorTitle.setTextFill(Color.web("#CB3083"));
+        return card;
+    }
 
-        VBox mentorBox = new VBox(10);
-        mentorBox.setAlignment(Pos.CENTER);
+    private Label createHeading(
+            String text, double size, String color
+    ) {
 
-        Label sachinSir = new Label("Sachin Sir");
-        sachinSir.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
-        sachinSir.setTextFill(Color.LIGHTYELLOW);
-        Label sachinNote = new Label("Your insights and encouragement helped me face tough challenges during the Super-X project. Your presence gave us the strength to push beyond our limits.");
-        sachinNote.setWrapText(true);
-        sachinNote.setTextFill(Color.WHITE);
-        sachinNote.setFont(Font.font("Georgia", 15));
+        Label label = new Label(text);
 
-        Label subodhSir = new Label("Subodh Sir");
-        subodhSir.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
-        subodhSir.setTextFill(Color.LIGHTYELLOW);
-        Label subodhNote = new Label("Thank you for always being approachable and ready to solve our technical roadblocks. Your mentorship meant a lot in shaping our journey.");
-        subodhNote.setWrapText(true);
-        subodhNote.setTextFill(Color.WHITE);
-        subodhNote.setFont(Font.font("Georgia", 15));
+        label.setFont(
+                Font.font("Arial", FontWeight.EXTRA_BOLD, size)
+        );
 
-        Label shivSir = new Label("Shiv Sir");
-        shivSir.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
-        shivSir.setTextFill(Color.LIGHTYELLOW);
-        Label shivNote = new Label("Your logical approach and motivation during hard times kept us moving. Your support had a deep impact on our performance in the Super-X project.");
-        shivNote.setWrapText(true);
-        shivNote.setTextFill(Color.WHITE);
-        shivNote.setFont(Font.font("Georgia", 15));
+        label.setTextFill(Color.web(color));
+        label.setWrapText(true);
 
-        Label poonam = new Label("Mentor: Poonam Didi");
-        poonam.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
-        poonam.setTextFill(Color.LIGHTYELLOW);
-        Label poonam1 = new Label("With heartfelt gratitude, we recognize Poonam Didi as one of the best mentors. Her unwavering support, thoughtful guidance, and endless encouragement played the most critical role in the Super-X project. Thank you for being the cornerstone of our success.");
-        poonam1.setWrapText(true);
-        poonam1.setTextFill(Color.WHITE);
-        poonam1.setFont(Font.font("Georgia", 15));
+        return label;
+    }
 
-        // === Ashture Ankita Section ===
-        Image ankitaImage = new Image("/asset\\ankita1.jpg");
-        ImageView ankitaImageView = new ImageView(ankitaImage);
-        ankitaImageView.setFitWidth(180);
-        ankitaImageView.setFitHeight(180);
-        ankitaImageView.setPreserveRatio(false);
-        ankitaImageView.setSmooth(true);
-        Circle ankitaClip = new Circle(90, 90, 90);
-        ankitaImageView.setClip(ankitaClip);
+    private Label createBody(String text) {
 
-        Label ankitaName = new Label("Ashture Ankita");
-        ankitaName.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
-        ankitaName.setTextFill(Color.LIGHTYELLOW);
+        Label label = new Label(text);
 
-        Label ankitaNote = new Label("With deep respect and regards, we thank Ashture Ankita for her passionate contribution and sincere dedication throughout the Super-X Project journey.\nHer consistency, focus, and positive energy brought our team closer to success.");
-        ankitaNote.setWrapText(true);
-        ankitaNote.setTextFill(Color.WHITE);
-        ankitaNote.setFont(Font.font("Georgia", 15));
+        label.setFont(Font.font("Arial", 15));
+        label.setTextFill(Color.web(MUTED));
+        label.setWrapText(true);
+        label.setMaxWidth(850);
 
-        VBox ankitaBox = new VBox(10, ankitaImageView, ankitaName, ankitaNote);
-        ankitaBox.setAlignment(Pos.CENTER);
+        return label;
+    }
 
-        mentorBox.getChildren().addAll(mentorTitle, sachinSir, sachinNote, subodhSir, subodhNote, shivSir, shivNote, poonam, poonam1, ankitaBox);
+    private VBox createMentorCard(
+            String icon,
+            String name,
+            String description
+    ) {
 
-        // === Intro, Mission, Offer, Why ===
-        Label intro = new Label("Welcome to the School of Musical Instrument Crafts.\n\n" +
-                "We specialize in teaching the traditional craftsmanship of musical instrument making — from violins and violas to guitars and woodwinds. " +
-                "With decades of heritage, we combine classic techniques with modern precision to help students master the art of instrument construction and repair.");
-        intro.setFont(Font.font("Georgia", FontWeight.BOLD, 25));
-        intro.setWrapText(true);
-        intro.setTextFill(Color.WHITE);
-        intro.setFont(Font.font("Georgia", 16));
+        VBox card = createCard();
 
-        Label missionTitle = new Label("Our Mission");
-        missionTitle.setFont(Font.font("Georgia", FontWeight.BOLD, 24));
-        missionTitle.setTextFill(Color.web("#CB3083"));
+        card.setPrefWidth(220);
+        card.setMinWidth(180);
+        card.setMaxWidth(260);
+        card.setMinHeight(220);
 
-        Label mission = new Label("To preserve and pass on the time-honored skills of musical instrument making and to foster the next generation of world-class luthiers and repair technicians.");
-        mission.setWrapText(true);
-        mission.setTextFill(Color.WHITE);
-        mission.setFont(Font.font("Georgia", 16));
+        card.setAlignment(Pos.TOP_LEFT);
+        card.setPadding(new Insets(22));
 
-        Label offerTitle = new Label("What We Offer");
-        offerTitle.setFont(Font.font("Georgia", FontWeight.BOLD, 24));
-        offerTitle.setTextFill(Color.web("#CB3083"));
+        Label iconLabel = new Label(icon);
 
-        Label offer = new Label("- Hands-on workshops guided by master craftspeople\n" +
-                "- Historical and modern instrument design study\n" +
-                "- Access to professional-grade tools and materials\n" +
-                "- Collaborative learning environment");
-        offer.setWrapText(true);
-        offer.setTextFill(Color.WHITE);
-        offer.setFont(Font.font("Georgia", 16));
+        iconLabel.setFont(Font.font("Arial", 30));
+        iconLabel.setTextFill(Color.web(PINK));
 
-        Label whyTitle = new Label("Why Choose Us");
-        whyTitle.setFont(Font.font("Georgia", FontWeight.BOLD, 24));
-        whyTitle.setTextFill(Color.web("#CB3083"));
+        Label nameLabel = createHeading(
+                name, 17, WHITE
+        );
 
-        Label why = new Label("- International reputation for excellence in craftsmanship\n" +
-                "- Alumni working in renowned orchestras and workshops worldwide\n" +
-                "- Beautiful campus and well-equipped workshops");
-        why.setWrapText(true);
-        why.setTextFill(Color.WHITE);
-        why.setFont(Font.font("Georgia", 16));
+        Label descriptionLabel = createBody(
+                description
+        );
 
-        Button backButton = new Button("← Back to Home");
-        backButton.setTextFill(Color.web("#0B101A"));
-        backButton.setOnAction(e -> new home1().start(stage));
+        descriptionLabel.setFont(Font.font("Arial", 13));
 
-        aboutBox.getChildren().addAll(title, imageTextBox, mentorBox, intro, missionTitle, mission, offerTitle, offer, whyTitle, why, backButton);
+        card.getChildren().addAll(
+                iconLabel,
+                nameLabel,
+                descriptionLabel
+        );
 
-        ScrollPane scrollPane = new ScrollPane(aboutBox);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background: #0B101A; -fx-border-color: transparent;");
+        return card;
+    }
 
-        Scene scene = new Scene(scrollPane, screenWidth, screenHeight);
-        stage.setScene(scene);
-        stage.setTitle("About - Musical Instrument Crafts");
-        stage.show();
+    private VBox createInfoCard(
+            String icon,
+            String title,
+            String description
+    ) {
+
+        VBox card = createCard();
+
+        card.setAlignment(Pos.TOP_LEFT);
+        card.setPrefWidth(300);
+        card.setMinWidth(180);
+        card.setMaxWidth(350);
+        card.setMinHeight(190);
+
+        Label iconLabel = new Label(icon);
+
+        iconLabel.setFont(Font.font("Arial", 28));
+
+        Label titleLabel = createHeading(
+                title, 19, PINK
+        );
+
+        Label descriptionLabel = createBody(
+                description
+        );
+
+        descriptionLabel.setFont(Font.font("Arial", 13));
+
+        card.getChildren().addAll(
+                iconLabel,
+                titleLabel,
+                descriptionLabel
+        );
+
+        addHoverEffect(card);
+
+        return card;
+    }
+
+    private void addHoverEffect(VBox card) {
+
+        card.setOnMouseEntered(e -> {
+
+            ScaleTransition scale = new ScaleTransition(
+                    Duration.millis(160), card
+            );
+
+            scale.setToX(1.025);
+            scale.setToY(1.025);
+            scale.play();
+        });
+
+        card.setOnMouseExited(e -> {
+
+            ScaleTransition scale = new ScaleTransition(
+                    Duration.millis(160), card
+            );
+
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+            scale.play();
+        });
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

@@ -49,3 +49,25 @@ Vedika Kadam
 ## GitHub Repository
 
 https://github.com/kadam806/RhythmZone
+
+## 📸 Application Screenshots
+
+### 🏠 Home Page
+
+![Home Page](screenshots/rhome.png)
+
+### ℹ️ About Us Page
+
+![About Us](screenshots/rabout.png)
+
+### 📚 Courses Page
+
+![Courses](screenshots/rcourses.png)
+
+### 🏠 Rental Page
+
+![Rental](screenshots/rrental.png)
+
+### 🛍️ Shop Page
+
+![Shop](screenshots/rshop.png)
