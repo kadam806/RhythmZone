@@ -64,10 +64,10 @@ https://github.com/kadam806/RhythmZone
 
 ![Courses](screenshots/rcourses.png)
 
-### 🏠 Rental Page
+### 🏠 Repairing Instruments Page
 
 ![Rental](screenshots/rrental.png)
 
-### 🛍️ Shop Page
+### 🛍️ Rental Instruments Page
 
 ![Shop](screenshots/rshop.png)
